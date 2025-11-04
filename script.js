@@ -1,30 +1,14 @@
-// Your code here.
-const container = document.querySelector('.items');
-let isDragging = false;
-let startX;
-let scrollLeft;
-
-container.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  startX = e.pageX - container.offsetLeft;
-  scrollLeft = container.scrollLeft;
-  container.style.cursor = 'grabbing';
-});
-
-container.addEventListener('mouseleave', () => {
-  isDragging = false;
-  container.style.cursor = 'grab';
-});
-
-container.addEventListener('mouseup', () => {
-  isDragging = false;
-  container.style.cursor = 'grab';
-});
-
-container.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
-  e.preventDefault();
-  const x = e.pageX - container.offsetLeft;
-  const walk = x - startX; 
-  container.scrollLeft = scrollLeft - walk;
-});
+.items {
+    position: relative;
+    height:300px;
+	width:300px;
+    border: 1px solid #000; 
+}
+.item {
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+    position: absolute; 
+	text-align:center;
+	
+}

@@ -1,54 +1,56 @@
+document.addEventListener('DOMContentLoaded', () => {
+  let selectedCube = null;
+  let offsetX = 0, offsetY = 0;
 
-html {
-  box-sizing: border-box;
-  background: url('https://source.unsplash.com/NFs6dRTBgaM/2000x2000') fixed;
-  background-size: cover;
-}
+  const container = document.querySelector('.items');  
 
-*, *:before, *:after {
-  box-sizing: inherit;
-}
+  document.querySelectorAll('.item').forEach(cube => {
+    cube.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      selectedCube = this;
+     
+      const rect = this.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      
+      this.style.zIndex = 1000;
+    });
+  });
 
-body {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: sans-serif;
-  font-size: 20px;
-  margin: 0;
-}
+  document.addEventListener('mousemove', function(e) {
+    if (!selectedCube) return;
+    e.preventDefault();
 
-.items {
-  height: 500px;          /* Ensures .items is visible */
-  width: 80%;
-  border: 2px solid white;
-  background: rgba(255,255,255,0.1);
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: flex-start;
-  padding: 10px;
-  overflow: hidden;
-}
+    let newX = e.clientX - offsetX;
+    let newY = e.clientY - offsetY;
 
-.item {
-  width: 100px;
-  height: 100px;
-  margin: 10px;
-  background-color: dodgerblue;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-weight: bold;
-  cursor: grab;
-  user-select: none;
-  border-radius: 8px;
-  position: absolute; /* Required for free dragging */
-}
+    const containerRect = container.getBoundingClientRect();
+    const cubeRect = selectedCube.getBoundingClientRect();
 
-.item:nth-child(odd) {
-  background-color: tomato;
-}
+    const minX = containerRect.left;
+    const minY = containerRect.top;
+    const maxX = containerRect.left + containerRect.width - cubeRect.width;
+    const maxY = containerRect.top + containerRect.height - cubeRect.height;
+
+    if (newX < minX) newX = minX;
+    if (newX > maxX) newX = maxX;
+    if (newY < minY) newY = minY;
+    if (newY > maxY) newY = maxY;
+
+    const relativeX = newX - containerRect.left;
+    const relativeY = newY - containerRect.top;
+
+    selectedCube.style.left = relativeX + 'px';
+    selectedCube.style.top = relativeY + 'px';
+  });
+
+  document.addEventListener('mouseup', function() {
+    if (selectedCube) {
+      selectedCube.style.zIndex = '';
+    }
+    selectedCube = null;
+  });
+});
+
+ 
+    
